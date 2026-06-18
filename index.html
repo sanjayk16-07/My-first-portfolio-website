@@ -315,5 +315,39 @@
   </div>
 
   <script src="script.js"></script>
+  <script>
+  (function() {
+    if (!window.chatbase || window.chatbase("getState") !== "initialized") {
+      window.chatbase = function() {
+        window.chatbase.q = window.chatbase.q || [];
+        window.chatbase.q.push(arguments);
+      };
+
+      window.chatbase = new Proxy(window.chatbase, {
+        get: function(target, prop) {
+          if (prop === "q") {
+            return target.q;
+          }
+          return function() {
+            return target(prop, ...arguments);
+          };
+        }
+      });
+    }
+
+    function loadChatbase() {
+      var script = document.createElement("script");
+      script.src = "https://www.chatbase.co/embed.min.js";
+      script.id = "DqhzMtdpExJhUtWWwQPlG";
+      document.body.appendChild(script);
+    }
+
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      loadChatbase();
+    } else {
+      window.addEventListener("load", loadChatbase);
+    }
+  })();
+  </script>
 </body>
 </html>
