@@ -169,11 +169,6 @@ function saveState() {
   renderPortfolio();
 }
 
-function saveState() {
-  localStorage.setItem("sanjay-portfolio-state", JSON.stringify(state));
-  renderPortfolio();
-}
-
 function initRouter() {
   const navLinks = document.querySelectorAll(".nav-link");
   const sections = document.querySelectorAll(".portfolio-section");
@@ -246,7 +241,7 @@ function renderPortfolio() {
   const contacts = ["phone", "email", "linkedin", "github"];
   contacts.forEach(contact => {
     const linkEl = document.getElementById(`link-${contact}`);
-    const textEl = linkEl.querySelector(".contact-text");
+    const textEl = linkEl ? linkEl.querySelector(".contact-text") : null;
     if (linkEl && textEl) {
       textEl.textContent = data.profile[`${contact}Val`];
       linkEl.href = data.profile[`${contact}Url`];
@@ -410,6 +405,12 @@ function initEditMode() {
   const cancelEditsBtn = document.getElementById("cancelEditsBtn");
   const saveEditsBtn = document.getElementById("saveEditsBtn");
   
+  function safeAddEvent(element, event, callback) {
+    if (element) {
+      element.addEventListener(event, callback);
+    }
+  }
+
   if (openEditModeBtn) openEditModeBtn.style.display = "none";
   if (dashEditBtn) dashEditBtn.style.display = "none";
 
@@ -446,20 +447,21 @@ function initEditMode() {
     }
   }
 
-  openEditModeBtn.addEventListener("click", startEditing);
-  if (dashEditBtn) dashEditBtn.addEventListener("click", startEditing);
+  safeAddEvent(openEditModeBtn, "click", startEditing);
+  safeAddEvent(dashEditBtn, "click", startEditing);
 
-  cancelEditsBtn.addEventListener("click", () => stopEditing(false));
-  saveEditsBtn.addEventListener("click", () => stopEditing(true));
+  safeAddEvent(cancelEditsBtn, "click", () => stopEditing(false));
+  safeAddEvent(saveEditsBtn, "click", () => stopEditing(true));
 
   const profileImageInput = document.getElementById("profileImageInput");
   const imageUploadOverlay = document.getElementById("imageUploadOverlay");
 
-  imageUploadOverlay.addEventListener("click", () => {
-    profileImageInput.click();
-  });
+  if (imageUploadOverlay && profileImageInput) {
+    imageUploadOverlay.addEventListener("click", () => {
+      profileImageInput.click();
+    });
 
-  profileImageInput.addEventListener("change", (e) => {
+    profileImageInput.addEventListener("change", (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -467,7 +469,9 @@ function initEditMode() {
         const base64Data = event.target.result;
         workingState.profile.avatar = base64Data;
 
-        document.getElementById("profileImage").src = base64Data;
+        const profileImageEl = document.getElementById("profileImage");
+        if (profileImageEl) profileImageEl.src = base64Data;
+
         document.querySelectorAll(".dash-profile-img").forEach(img => {
           img.src = base64Data;
         });
@@ -475,6 +479,7 @@ function initEditMode() {
       reader.readAsDataURL(file);
     }
   });
+  }
 
   setupAddingHandlers();
   setupDeletingHandlers();
@@ -484,11 +489,9 @@ function makeFieldsEditable(enabled) {
   const editables = document.querySelectorAll(".editable-field, .editable-value");
   editables.forEach(el => {
     el.setAttribute("contenteditable", enabled ? "true" : "false");
-
+    el.removeEventListener("click", preventDefaultLinkClick);
     if (enabled) {
       el.addEventListener("click", preventDefaultLinkClick);
-    } else {
-      el.removeEventListener("click", preventDefaultLinkClick);
     }
   });
 }
@@ -530,60 +533,78 @@ function removeLinkEditForms() {
 }
 
 function setupAddingHandlers() {
-  document.getElementById("addHighlightBtn").addEventListener("click", () => {
-    workingState.about.quickFacts.push({ label: "Fact Label", value: "Fact Detail" });
-    renderPortfolio();
-  });
+  const addHighlightBtn = document.getElementById("addHighlightBtn");
+  const addEducationBtn = document.getElementById("addEducationBtn");
+  const addSkillBtn = document.getElementById("addSkillBtn");
+  const addCertBtn = document.getElementById("addCertBtn");
+  const addExtraBtn = document.getElementById("addExtraBtn");
 
-  document.getElementById("addEducationBtn").addEventListener("click", () => {
-    const newId = `edu-${Date.now()}`;
-    workingState.education.push({
-      id: newId,
-      period: "2025 — Present",
-      degree: "Enter Degree Name",
-      school: "Enter Institution Name",
-      score: "GPA: 9.0/10",
-      details: "Write details or syllabus milestones about this degree record."
+  if (addHighlightBtn) {
+    addHighlightBtn.addEventListener("click", () => {
+      workingState.about.quickFacts.push({ label: "Fact Label", value: "Fact Detail" });
+      renderPortfolio();
     });
-    renderPortfolio();
-  });
+  }
 
-  document.getElementById("addSkillBtn").addEventListener("click", () => {
-    workingState.skills.push({
-      category: "New Skill Group",
-      tags: ["HTML", "CSS", "JS"]
+  if (addEducationBtn) {
+    addEducationBtn.addEventListener("click", () => {
+      const newId = `edu-${Date.now()}`;
+      workingState.education.push({
+        id: newId,
+        period: "2025 — Present",
+        degree: "Enter Degree Name",
+        school: "Enter Institution Name",
+        score: "GPA: 9.0/10",
+        details: "Write details or syllabus milestones about this degree record."
+      });
+      renderPortfolio();
     });
-    renderPortfolio();
-  });
+  }
 
-  document.getElementById("addCertBtn").addEventListener("click", () => {
-    const newId = `cert-${Date.now()}`;
-    workingState.certs.push({
-      id: newId,
-      title: "Certification Title",
-      issuer: "Credential Authority",
-      date: "Month Year"
+  if (addSkillBtn) {
+    addSkillBtn.addEventListener("click", () => {
+      workingState.skills.push({
+        category: "New Skill Group",
+        tags: ["HTML", "CSS", "JS"]
+      });
+      renderPortfolio();
     });
-    renderPortfolio();
-  });
+  }
 
-  document.getElementById("addExtraBtn").addEventListener("click", () => {
-    const newId = `extra-${Date.now()}`;
-    workingState.extracurricular.push({
-      id: newId,
-      role: "Lead Coordinator",
-      activity: "Activity Name / Organization",
-      period: "Period Dates",
-      desc: "Provide details of your involvement, responsibilities, and achievements."
+  if (addCertBtn) {
+    addCertBtn.addEventListener("click", () => {
+      const newId = `cert-${Date.now()}`;
+      workingState.certs.push({
+        id: newId,
+        title: "Certification Title",
+        issuer: "Credential Authority",
+        date: "Month Year"
+      });
+      renderPortfolio();
     });
-    renderPortfolio();
-  });
+  }
+
+  if (addExtraBtn) {
+    addExtraBtn.addEventListener("click", () => {
+      const newId = `extra-${Date.now()}`;
+      workingState.extracurricular.push({
+        id: newId,
+        role: "Lead Coordinator",
+        activity: "Activity Name / Organization",
+        period: "Period Dates",
+        desc: "Provide details of your involvement, responsibilities, and achievements."
+      });
+      renderPortfolio();
+    });
+  }
 
   document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("add-tag-inline-btn")) {
+    if (e.target.classList && e.target.classList.contains("add-tag-inline-btn")) {
       const catIdx = parseInt(e.target.getAttribute("data-cat-index"), 10);
-      workingState.skills[catIdx].tags.push("New Skill");
-      renderPortfolio();
+      if (!Number.isNaN(catIdx) && workingState.skills[catIdx]) {
+        workingState.skills[catIdx].tags.push("New Skill");
+        renderPortfolio();
+      }
     }
   });
 }
@@ -629,6 +650,7 @@ function gatherCurrentEdits() {
   const contacts = ["phone", "email", "linkedin", "github"];
   contacts.forEach(contact => {
     const linkEl = document.getElementById(`link-${contact}`);
+    if (!linkEl) return;
     const textEl = linkEl.querySelector(".contact-text");
     if (textEl) {
       workingState.profile[`${contact}Val`] = textEl.textContent.trim();
