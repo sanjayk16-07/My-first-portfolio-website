@@ -157,6 +157,7 @@ function loadState() {
   }
 
   if (!state.profile) state.profile = { ...DEFAULT_STATE.profile };
+  if (!state.profile.avatar) state.profile.avatar = DEFAULT_STATE.profile.avatar;
   if (!state.about) state.about = { ...DEFAULT_STATE.about };
   if (!state.education) state.education = [...DEFAULT_STATE.education];
   if (!state.skills) state.skills = [...DEFAULT_STATE.skills];
@@ -236,7 +237,12 @@ function renderPortfolio() {
   });
 
   const profileImg = document.getElementById("profileImage");
-  if (profileImg) profileImg.src = data.profile.avatar;
+  if (profileImg) {
+    profileImg.src = data.profile.avatar || DEFAULT_STATE.profile.avatar;
+    profileImg.onerror = () => {
+      profileImg.src = DEFAULT_STATE.profile.avatar;
+    };
+  }
 
   const contacts = ["phone", "email", "linkedin", "github"];
   contacts.forEach(contact => {
@@ -355,7 +361,10 @@ function renderPortfolio() {
 
   const dashProfileImgs = document.querySelectorAll(".dash-profile-img");
   dashProfileImgs.forEach(img => {
-    img.src = data.profile.avatar;
+    img.src = data.profile.avatar || DEFAULT_STATE.profile.avatar;
+    img.onerror = () => {
+      img.src = DEFAULT_STATE.profile.avatar;
+    };
   });
 
   const statEducation = document.getElementById("statEducation");
