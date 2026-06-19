@@ -238,10 +238,12 @@ function renderPortfolio() {
 
   const profileImg = document.getElementById("profileImage");
   if (profileImg) {
-    profileImg.src = data.profile.avatar || DEFAULT_STATE.profile.avatar;
+    const avatarSrc = data.profile.avatar || DEFAULT_STATE.profile.avatar;
     profileImg.onerror = () => {
+      profileImg.onerror = null;
       profileImg.src = DEFAULT_STATE.profile.avatar;
     };
+    profileImg.src = avatarSrc;
   }
 
   const contacts = ["phone", "email", "linkedin", "github"];
