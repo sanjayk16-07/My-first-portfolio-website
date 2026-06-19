@@ -4,13 +4,15 @@
 
 const STORAGE_KEY = "sanjay-portfolio-state";
 const STORAGE_VERSION = 2;
+const DEFAULT_AVATAR = "profile_photo.jpeg";
+const LEGACY_AVATAR = "profile_placeholder.png";
 
 const DEFAULT_STATE = {
   profile: {
     name: "Sanjay.K",
     tagline: "Frontend Developer & UI/UX & AI Enthusiast",
     intro: "I am an Information Technology student specializing in building interactive and visually appealing web applications. I combine modern web technologies with clean, minimal design patterns.",
-    avatar: "profile_placeholder.png",
+    avatar: DEFAULT_AVATAR,
     phoneVal: "+91 7538811216",
     phoneUrl: "tel:+917538811216",
     emailVal: "sanjayk160727@gmail.com",
@@ -157,7 +159,9 @@ function loadState() {
   }
 
   if (!state.profile) state.profile = { ...DEFAULT_STATE.profile };
-  if (!state.profile.avatar) state.profile.avatar = DEFAULT_STATE.profile.avatar;
+  if (!state.profile.avatar || state.profile.avatar === LEGACY_AVATAR) {
+    state.profile.avatar = DEFAULT_STATE.profile.avatar;
+  }
   if (!state.about) state.about = { ...DEFAULT_STATE.about };
   if (!state.education) state.education = [...DEFAULT_STATE.education];
   if (!state.skills) state.skills = [...DEFAULT_STATE.skills];
