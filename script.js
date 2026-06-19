@@ -245,13 +245,13 @@ function renderPortfolio() {
     const avatarSrc = data.profile.avatar || DEFAULT_STATE.profile.avatar;
     profileImg.onerror = () => {
       profileImg.onerror = null;
-      profileImg.src = DEFAULT_STATE.profile.avatar;
+      profileImg.src = LEGACY_AVATAR;
     };
     profileImg.src = avatarSrc;
 
     const imageContainer = profileImg.closest('.hero-image-container');
     if (imageContainer) {
-      if (avatarSrc === DEFAULT_STATE.profile.avatar) {
+      if (avatarSrc === DEFAULT_STATE.profile.avatar || avatarSrc === LEGACY_AVATAR) {
         imageContainer.classList.add('default-avatar');
       } else {
         imageContainer.classList.remove('default-avatar');
@@ -378,7 +378,8 @@ function renderPortfolio() {
   dashProfileImgs.forEach(img => {
     img.src = data.profile.avatar || DEFAULT_STATE.profile.avatar;
     img.onerror = () => {
-      img.src = DEFAULT_STATE.profile.avatar;
+      img.onerror = null;
+      img.src = LEGACY_AVATAR;
     };
   });
 
