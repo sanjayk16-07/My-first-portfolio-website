@@ -9,7 +9,7 @@ const DEFAULT_STATE = {
   profile: {
     name: "Sanjay.K",
     tagline: "Frontend Developer & UI/UX & AI Enthusiast",
-    intro: "I am a Information Technology student specializing in building interactive and visually appealing web applications. I combine modern web technologies with clean, minimal design patterns.",
+    intro: "I am an Information Technology student specializing in building interactive and visually appealing web applications. I combine modern web technologies with clean, minimal design patterns.",
     avatar: "profile_placeholder.png",
     phoneVal: "+91 7538811216",
     phoneUrl: "tel:+917538811216",
@@ -58,7 +58,7 @@ const DEFAULT_STATE = {
     },
     {
       category: "Tools & Methodologies",
-      tags: ["Git & GitHub", "Visual Studio Code", "Figma", "Web Accessibility (a11y)", "Vercel / Netlify", "Claude","GPT-5"]
+      tags: ["Git & GitHub", "Visual Studio Code", "Figma", "Web Accessibility (a11y)", "Vercel / Netlify", "AI Tools"]
     },
     {
       category: "Core Information Technology Concepts",
@@ -81,7 +81,7 @@ const DEFAULT_STATE = {
     {
       id: "cert-3",
       title: "Python for Complete Beginners",
-      issuer: "Cursa",
+      issuer: "Coursera",
       date:"May 2026"
     }
   ],
@@ -89,14 +89,14 @@ const DEFAULT_STATE = {
     {
       id: "extra-1",
       role: "Sports",
-      activity: "Badmiton",
-      desc: "iam so passionate about badmiton and thsi sports make me focus and enthu"
+        activity: "Badminton",
+        desc: "I am passionate about badminton; the sport keeps me focused and enthusiastic."
     },
     {
       id: "extra-2",
       role: "Learn about AI",
-      activity: "AI tools works",
-      desc: "creating about websites with AI Tools and process."
+        activity: "AI tools",
+        desc: "Creating websites with AI tools and related workflows."
     },
     {
       id: "extra-3",
