@@ -244,6 +244,15 @@ function renderPortfolio() {
       profileImg.src = DEFAULT_STATE.profile.avatar;
     };
     profileImg.src = avatarSrc;
+
+    const imageContainer = profileImg.closest('.hero-image-container');
+    if (imageContainer) {
+      if (avatarSrc === DEFAULT_STATE.profile.avatar) {
+        imageContainer.classList.add('default-avatar');
+      } else {
+        imageContainer.classList.remove('default-avatar');
+      }
+    }
   }
 
   const contacts = ["phone", "email", "linkedin", "github"];
