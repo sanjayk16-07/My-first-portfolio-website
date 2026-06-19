@@ -38,7 +38,7 @@ const DEFAULT_STATE = {
       id: "edu-1",
       period: "2026 — Present",
       degree: "Bachelor of Technology in Information Technology ",
-      College: "St.joseph's Institute of Technology",
+      school: "St.joseph's Institute of Technology",
       score: "GPA: 8.080/10",
       details: "Focusing on fundamental computer science disciplines including Algorithms, Data Structures, Database Systems, and Software Engineering. Active member and organizer in the student coding community."
     },
