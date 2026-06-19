@@ -46,10 +46,6 @@
           <div class="image-border-decoration"></div>
           <div class="hero-image-container">
             <img id="profileImage" src="profile_placeholder.png" alt="Sanjay.K Portfolio Photo">
-            <div class="hero-image-placeholder">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4Zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4Z"/></svg>
-              <span>Your photo will appear here</span>
-            </div>
             <div class="image-upload-overlay" id="imageUploadOverlay">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>
               <span>Upload Photo</span>
@@ -319,6 +315,39 @@
   </div>
 
   <script src="script.js"></script>
-  <!-- External analytics/chat embed removed to preserve privacy and avoid unexpected external loads -->
+  <script>
+  (function() {
+    if (!window.chatbase || window.chatbase("getState") !== "initialized") {
+      window.chatbase = function() {
+        window.chatbase.q = window.chatbase.q || [];
+        window.chatbase.q.push(arguments);
+      };
+
+      window.chatbase = new Proxy(window.chatbase, {
+        get: function(target, prop) {
+          if (prop === "q") {
+            return target.q;
+          }
+          return function() {
+            return target(prop, ...arguments);
+          };
+        }
+      });
+    }
+
+    function loadChatbase() {
+      var script = document.createElement("script");
+      script.src = "https://www.chatbase.co/embed.min.js";
+      script.id = "DqhzMtdpExJhUtWWwQPlG";
+      document.body.appendChild(script);
+    }
+
+    if (document.readyState === "complete" || document.readyState === "interactive") {
+      loadChatbase();
+    } else {
+      window.addEventListener("load", loadChatbase);
+    }
+  })();
+  </script>
 </body>
 </html>
